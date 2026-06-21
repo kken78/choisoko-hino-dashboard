@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>チョイソコひの 利用状況ダッシュボード（プロトタイプ）</title>
+<meta name="description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の利用状況を視覚化したダッシュボード（オープンデータ利活用の実証実験）">
+
+<!-- ===== OGP / Twitter Card ===== -->
+<!-- ↓ ご自身の公開URLに2か所書き換えてください（末尾スラッシュあり） -->
+<meta property="og:url" content="https://kken78.github.io/choisoko-hino-dashboard/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="チョイソコひの 利用状況ダッシュボード">
+<meta property="og:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化。運行開始からの累計 利用件数・会員数・乗合率などを掲載（オープンデータ利活用の実証実験）。">
+<meta property="og:image" content="https://kken78.github.io/choisoko-hino-dashboard/assets/ogp.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="チョイソコひの 利用状況ダッシュボード — 累計利用件数22,489件、登録会員2,271人、乗合率1.37人/便">
+<meta property="og:site_name" content="チョイソコひの ダッシュボード">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="チョイソコひの 利用状況ダッシュボード">
+<meta name="twitter:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化したダッシュボード。">
+<meta name="twitter:image" content="https://kken78.github.io/choisoko-hino-dashboard/assets/ogp.png">
+<!-- ============================== -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f3f6f4;
+  --surface:#ffffff;
+  --ink:#1f2b29;
+  --ink-soft:#5a6b67;
+  --line:#dde5e2;
+  --brand:#1f8a70;       /* チョイソコの「移動」をあらわす深い緑 */
+  --brand-soft:#e3f1ec;
+  --accent:#e8862e;      /* 高齢者の温かみ・夕暮れの送迎 */
+  --accent-soft:#fbe5d4;
+  --blue:#2f6db5;
+  --good:#1f8a70;
+  --warn:#cf4f3e;
+  --neutral:#8a9a96;
+  --radius:14px;
+  --shadow:0 1px 3px rgba(31,43,41,.08),0 6px 18px rgba(31,43,41,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Noto Sans JP",system-ui,sans-serif;
+  background:var(--bg);color:var(--ink);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+
+/* ---------- Header ---------- */
+header{
+  background:linear-gradient(135deg,#1f8a70 0%,#0f6e58 100%);
+  color:#fff;padding:34px 0 30px;position:relative;overflow:hidden;
+}
+header::after{
+  content:"";position:absolute;right:-40px;bottom:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+}
+.eyebrow{
+  font-size:.78rem;letter-spacing:.18em;font-weight:700;
+  opacity:.85;margin-bottom:8px;
+}
+header h1{
+  font-family:"Zen Maru Gothic",sans-serif;font-weight:700;
+  font-size:clamp(1.5rem,4.5vw,2.3rem);line-height:1.25;
+}
+header p.sub{margin-top:10px;font-size:.92rem;opacity:.92;max-width:640px}
+.period-badge{
+  display:inline-block;margin-top:14px;background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.25);
+  padding:5px 14px;border-radius:999px;font-size:.82rem;font-weight:500;
+}
+
+/* ---------- Time switch ---------- */
+.timebar{
+  background:var(--surface);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.02);
+}
+.timebar .inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0}
+.timebar .lbl{font-size:.8rem;color:var(--ink-soft);font-weight:700}
+.seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{
+  border:0;background:transparent;cursor:pointer;
+  font-family:inherit;font-size:.85rem;font-weight:700;color:var(--ink-soft);
+  padding:7px 14px;border-radius:8px;transition:.15s;white-space:nowrap;
+}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:var(--shadow)}
+.seg button small{margin-left:3px;font-weight:500;opacity:.85}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- Sections ---------- */
+section{padding:30px 0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.sec-head h2{
+  font-family:"Zen Maru Gothic",sans-serif;font-size:1.25rem;font-weight:700;
+}
+.sec-head .note{font-size:.8rem;color:var(--ink-soft)}
+
+/* ---------- KPI cards ---------- */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px}
+.kpi{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;
+}
+.kpi .k-label{font-size:.8rem;color:var(--ink-soft);font-weight:500;display:flex;align-items:center;gap:6px}
+.kpi .k-val{font-family:"Zen Maru Gothic",sans-serif;font-size:1.9rem;font-weight:700;margin-top:4px;line-height:1.1}
+.kpi .k-unit{font-size:.85rem;font-weight:500;color:var(--ink-soft);margin-left:3px}
+.kpi .k-delta{font-size:.78rem;font-weight:700;margin-top:8px;display:inline-flex;align-items:center;gap:4px}
+.k-delta.up{color:var(--good)}
+.k-delta.down{color:var(--warn)}
+.k-delta.flat{color:var(--neutral)}
+.kpi .k-sub{font-size:.72rem;color:var(--ink-soft);margin-top:6px}
+.tag{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.04em}
+.tag.cum{background:var(--brand-soft);color:var(--brand)}
+
+/* ---------- Chart cards ---------- */
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);
+}
+.card.full{grid-column:1/-1}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:4px}
+.card .desc{font-size:.78rem;color:var(--ink-soft);margin-bottom:14px}
+.chart-box{position:relative;width:100%;height:300px}
+.chart-box.tall{height:360px}
+.chart-box.short{height:240px}
+
+/* ---------- Table ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:520px}
+th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--brand-soft);color:var(--brand);font-weight:700;position:sticky;top:0}
+tbody tr:hover{background:var(--brand-soft)}
+.bar-cell{position:relative}
+.bar-cell .bar{position:absolute;left:0;top:0;bottom:0;background:var(--brand-soft);z-index:0}
+.bar-cell span{position:relative;z-index:1}
+
+/* ---------- Footer ---------- */
+footer{background:#16413a;color:#cfe3dc;padding:28px 0;font-size:.82rem;margin-top:20px}
+footer a{color:#9fe0cc}
+footer .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+footer h4{color:#fff;font-size:.9rem;margin-bottom:8px;font-family:"Zen Maru Gothic",sans-serif}
+footer ul{list-style:none;font-size:.78rem;line-height:1.9}
+.disclaimer{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);font-size:.74rem;opacity:.85}
+
+.legend-inline{display:flex;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--ink-soft);margin-top:10px}
+.legend-inline span{display:inline-flex;align-items:center;gap:5px}
+.legend-inline i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* ---------- embed mode ---------- */
+body.embed header,body.embed footer,body.embed .timebar{display:none}
+body.embed section{padding:14px 0}
+
+@media(max-width:640px){
+  .chart-box{height:260px}
+  header{padding:26px 0 24px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">CHOISOKO HINO · OPEN DATA DASHBOARD</div>
+    <h1>チョイソコひの 利用状況ダッシュボード</h1>
+    <p class="sub">滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行レポートを抽出・視覚化した、オープンデータ利活用の実証実験（プロトタイプ）です。運行開始（令和5年3月）からの累計データを掲載しています。</p>
+    <div class="period-badge" id="periodBadge">運行開始 令和5年3月 〜 最新 令和8年3月</div>
+  </div>
+</header>
+
+<div class="timebar">
+  <div class="wrap inner">
+    <span class="lbl">集計時点（累計）</span>
+    <div class="seg" id="timeSeg" role="group" aria-label="集計時点の切り替え">
+      <button data-t="R5.3">令和5年3月<small>（初月）</small></button>
+      <button data-t="R6.3">令和6年3月<small>（1年）</small></button>
+      <button data-t="R7.3">令和7年3月<small>（2年）</small></button>
+      <button data-t="R8.3" aria-pressed="true">令和8年3月<small>（3年）</small></button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- KPI -->
+  <section id="overview">
+    <div class="sec-head">
+      <h2>まちの足の、いま</h2>
+      <span class="note" id="kpiNote"></span>
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
+
+  <!-- Trend -->
+  <section id="trend">
+    <div class="sec-head">
+      <h2>利用の伸び</h2>
+      <span class="note">月ごとの利用件数・利用人数の推移（全期間共通）</span>
+    </div>
+    <div class="chart-grid">
+      <div class="card full">
+        <h3>利用件数の推移（月間）</h3>
+        <p class="desc">棒：月間の利用件数／線：1日当たり利用件数。令和5年9月から有償運行に移行しています。</p>
+        <div class="chart-box tall"><canvas id="trendChart"></canvas></div>
+      </div>
+      <div class="card full">
+        <h3>月別利用人数</h3>
+        <p class="desc">その月に1回でも利用した人の合計数。リピーターを除いた「実際に使った人」の規模感を表します。</p>
+        <div class="chart-box"><canvas id="usersChart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who -->
+  <section id="who">
+    <div class="sec-head">
+      <h2>誰が使っているか</h2>
+      <span class="note" id="whoNote"></span>
+    </div>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>年代別構成</h3>
+        <p class="desc">登録会員と、実際の利用会員の年代構成。利用は80歳代以上に厚く寄ります。</p>
+        <div class="chart-box short"><canvas id="ageChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>男女比</h3>
+        <p class="desc">登録・利用ともに女性が多数を占めます。</p>
+        <div class="chart-box short"><canvas id="genderChart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- When/How -->
+  <section id="howwhen">
+    <div class="sec-head">
+      <h2>いつ・どう予約するか</h2>
+      <span class="note" id="bookNote"></span>
+    </div>
+    <div class="chart-grid">
+      <div class="card">
+        <h3>時間帯別の利用</h3>
+        <p class="desc">通院・買い物の時間帯にあたる午前中（8〜11時台）に集中します。</p>
+        <div class="chart-box short"><canvas id="hourlyChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>曜日別の平均利用件数</h3>
+        <p class="desc">1日あたりの平均。土日は運休のため平日のみ。</p>
+        <div class="chart-box short"><canvas id="weekdayChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>予約のタイミング</h3>
+        <p class="desc">何日前に予約したか。当日予約も一定の割合を占めます。</p>
+        <div class="chart-box short"><canvas id="timingChart"></canvas></div>
+      </div>
+      <div class="card">
+        <h3>予約の方法（WEB / 電話）</h3>
+        <p class="desc">電話が主流ですが、WEB予約の比率が時点を追うごとに上昇しています。</p>
+        <div class="chart-box short"><canvas id="methodChart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Where -->
+  <section id="where">
+    <div class="sec-head">
+      <h2>どこへ行くか</h2>
+      <span class="note">運行開始からの累計（令和8年3月時点・上位15停留所）</span>
+    </div>
+    <div class="card full">
+      <h3>目的地停留所 乗降回数 上位15</h3>
+      <p class="desc">病院・スーパー・駅・役場が上位を占めます。横棒は乗車＋降車の合計。</p>
+      <div class="chart-box" style="height:520px"><canvas id="stopsChart"></canvas></div>
+    </div>
+  </section>
+
+  <!-- District table -->
+  <section id="district">
+    <div class="sec-head">
+      <h2>地区別の利用状況</h2>
+      <span class="note">令和8年3月時点・累計 ／ 利用回数の多い順</span>
+    </div>
+    <div class="tbl-wrap">
+      <table id="districtTable">
+        <thead>
+          <tr><th>統計地区</th><th>登録者数</th><th>利用者数</th><th>利用割合</th><th>利用回数</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" style="margin-top:10px;font-size:.74rem;color:var(--ink-soft)">
+      ※会員登録時に設定した最寄りの停留所が所在する地区ごとに集計しているため、地区住民以外も含まれます。「その他」は目的地停留所を最寄りに設定している方等です。
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>このダッシュボードについて</h4>
+        <p style="font-size:.78rem">日野町のデマンド型乗合交通「チョイソコひの」の公開運行レポート（PDF）からデータを抽出し、視覚化したオープンデータ利活用の実証実験です。日野町の公式システムではありません。</p>
+      </div>
+      <div>
+        <h4>収録データ</h4>
+        <ul>
+          <li>利用件数・利用人数の月別推移</li>
+          <li>年代別・男女別の会員構成</li>
+          <li>時間帯・曜日・予約方法の傾向</li>
+          <li>目的地停留所・地区別利用状況</li>
+        </ul>
+      </div>
+      <div>
+        <h4>埋め込み</h4>
+        <p style="font-size:.78rem">URL末尾に <code>?embed=true</code> を付けるとヘッダー・フッターを隠して埋め込み表示になります。<code>#trend</code> 等で開く位置も指定できます。</p>
+      </div>
+      <div>
+        <h4>元データ（出典）</h4>
+        <p style="font-size:.78rem;margin-bottom:6px">日野町公式サイト「<a href="https://www.town.shiga-hino.lg.jp/0000006854.html" target="_blank" rel="noopener">チョイソコひの</a>」で公開されている利用状況レポート（PDF）：</p>
+        <ul>
+          <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR5.3.pdf" target="_blank" rel="noopener">利用状況 令和5年3月末まで</a></li>
+          <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR6.3.pdf" target="_blank" rel="noopener">利用状況 令和6年3月末まで</a></li>
+          <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR7.3.pdf" target="_blank" rel="noopener">利用状況 令和7年3月末まで</a></li>
+          <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.3.pdf" target="_blank" rel="noopener">利用状況 令和8年3月末まで</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>免責：</strong>本データは公開PDFから独自に抽出したものです。読み取り誤差を含む可能性があるため、正確な数値が必要な場合は必ず日野町の公式資料をご確認ください。一部の月別利用人数・年代別構成は原資料の表示の重なりにより読み取りに幅があります。
+      ／ ソースコード：MIT License ・データ：CC BY 4.0相当
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===================== データ読み込み =====================
+const DATA = {};
+async function loadCSV(name){
+  const res = await fetch(`data/${name}.csv`);
+  const text = await res.text();
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',');
+  return lines.slice(1).map(line=>{
+    // カンマを含む引用なし簡易パース（本データはカンマ無し前提）
+    const cells = line.split(',');
+    const obj={};
+    headers.forEach((h,i)=>obj[h.trim()] = (cells[i]??'').trim());
+    return obj;
+  });
+}
+
+const PALETTE = {
+  brand:'#1f8a70', brandSoft:'#9ed3c4', accent:'#e8862e', accentSoft:'#f3c79a',
+  blue:'#2f6db5', neutral:'#b6c2bf', warn:'#cf4f3e',
+  age:['#cfe3dc','#a8d2c5','#7fc0ac','#56ad93','#2f9479','#1f8a70','#e8862e','#d96f2a','#b9531f'],
+};
+Chart.defaults.font.family = "'Noto Sans JP',sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#5a6b67';
+Chart.defaults.plugins.legend.labels.boxWidth = 12;
+Chart.defaults.plugins.legend.labels.boxHeight = 12;
+
+let state = { t:'R8.3' };
+const charts = {};
+const AGE_LABELS=['20歳未満','20歳代','30歳代','40歳代','50歳代','60歳代','70歳代','80歳代','90歳以上'];
+const fmt = n => Number(n).toLocaleString('ja-JP');
+// "R5.3" → "令和5年3月" / "R5.3.1〜R6.3.31" → "令和5年3月1日〜令和6年3月31日"
+const wareki = s => String(s).replace(/R(\d+)\.(\d+)(?:\.(\d+))?/g,
+  (_,y,m,d)=> d!==undefined ? `令和${y}年${m}月${d}日` : `令和${y}年${m}月`);
+
+// ===================== KPI =====================
+function renderKPI(){
+  const rows = DATA.summary;
+  const cur = rows.find(r=>r['時点']===state.t);
+  const idx = rows.indexOf(cur);
+  const prev = idx>0 ? rows[idx-1] : null;
+  document.getElementById('periodBadge').textContent = `集計期間：${wareki(cur['期間'])}`;
+  document.getElementById('kpiNote').textContent = `${wareki(state.t)} 時点の累計値`;
+
+  const defs = [
+    {key:'登録会員数',label:'登録会員数',unit:'人',dir:'up'},
+    {key:'利用会員数',label:'利用会員数',unit:'人',dir:'up'},
+    {key:'利用件数',label:'累計 利用件数',unit:'件',dir:'up'},
+    {key:'1日当たり利用件数',label:'1日当たり利用件数',unit:'件/日',dir:'up',dec:true},
+    {key:'乗合率',label:'乗合率',unit:'人/便',dir:'up',dec:true,sub:'1便に何人が相乗りしたか'},
+    {key:'WEB予約率',label:'WEB予約率',unit:'%',dir:'up',sub:'残りは電話予約'},
+  ];
+  const grid = document.getElementById('kpiGrid');
+  grid.innerHTML = '';
+  defs.forEach(d=>{
+    const v = cur[d.key];
+    if(v==='' || v==null){ return; }
+    let deltaHTML='';
+    if(prev && prev[d.key]!==''){
+      const diff = Number(v)-Number(prev[d.key]);
+      const cls = diff>0?'up':(diff<0?'down':'flat');
+      const arrow = diff>0?'▲':(diff<0?'▼':'＝');
+      const dv = d.dec? diff.toFixed(2): fmt(Math.abs(diff));
+      deltaHTML = `<div class="k-delta ${cls}">${arrow} ${d.dec?Math.abs(diff).toFixed(2):fmt(Math.abs(diff))} <span style="font-weight:400;color:var(--ink-soft)">前時点比</span></div>`;
+    }
+    grid.insertAdjacentHTML('beforeend',`
+      <div class="kpi">
+        <div class="k-label">${d.label} <span class="tag cum">累計</span></div>
+        <div class="k-val">${d.dec?Number(v).toFixed(2):fmt(v)}<span class="k-unit">${d.unit}</span></div>
+        ${deltaHTML}
+        ${d.sub?`<div class="k-sub">${d.sub}</div>`:''}
+      </div>`);
+  });
+}
+
+// ===================== 推移（全期間共通） =====================
+function renderTrend(){
+  const m = DATA.monthly;
+  const labels = m.map(r=>r['和暦']);
+  const cases = m.map(r=>Number(r['利用件数']));
+  const perday = m.map(r=>Number(r['1日当たり利用件数']));
+  const splitIdx = m.findIndex(r=>r['運行区分']==='有償');
+
+  if(charts.trend) charts.trend.destroy();
+  charts.trend = new Chart(document.getElementById('trendChart'),{
+    data:{labels,datasets:[
+      {type:'bar',label:'利用件数（月間）',data:cases,backgroundColor:PALETTE.brandSoft,borderColor:PALETTE.brand,borderWidth:1,yAxisID:'y',order:2},
+      {type:'line',label:'1日当たり利用件数',data:perday,borderColor:PALETTE.accent,backgroundColor:PALETTE.accent,tension:.3,pointRadius:2,borderWidth:2,yAxisID:'y1',order:1},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top'},
+        annotation:false,
+        tooltip:{callbacks:{
+          title:(items)=>wareki(m[items[0].dataIndex]['和暦']),
+          afterBody:(items)=>{
+          const r=m[items[0].dataIndex];return r['運行区分']==='無償'?'運行区分：無償':'運行区分：有償';}}}},
+      scales:{
+        x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},
+        y:{title:{display:true,text:'件数（月間）'},beginAtZero:true},
+        y1:{position:'right',title:{display:true,text:'1日当たり（件）'},beginAtZero:true,grid:{drawOnChartArea:false}},
+      }}
+  });
+
+  if(charts.users) charts.users.destroy();
+  charts.users = new Chart(document.getElementById('usersChart'),{
+    type:'bar',
+    data:{labels,datasets:[{label:'月別利用人数',data:m.map(r=>Number(r['月別利用人数'])),backgroundColor:PALETTE.brand,borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:(items)=>wareki(m[items[0].dataIndex]['和暦'])}}},
+      scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{beginAtZero:true,title:{display:true,text:'人'}}}}
+  });
+}
+
+// ===================== 年代・男女 =====================
+function renderWho(){
+  const a = DATA.age.filter(r=>r['時点']===state.t);
+  const reg = a.find(r=>r['区分']==='登録');
+  const use = a.find(r=>r['区分']==='利用');
+  document.getElementById('whoNote').textContent = `${wareki(state.t)} 時点`;
+
+  if(charts.age) charts.age.destroy();
+  charts.age = new Chart(document.getElementById('ageChart'),{
+    type:'bar',
+    data:{labels:AGE_LABELS,datasets:[
+      {label:'登録会員',data:AGE_LABELS.map(l=>Number(reg[l])),backgroundColor:PALETTE.brandSoft},
+      {label:'利用会員',data:AGE_LABELS.map(l=>Number(use[l])),backgroundColor:PALETTE.accent},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}：${c.parsed.y}%`}}},
+      scales:{x:{grid:{display:false}},y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}}
+  });
+
+  const cur = DATA.summary.find(r=>r['時点']===state.t);
+  if(charts.gender) charts.gender.destroy();
+  charts.gender = new Chart(document.getElementById('genderChart'),{
+    type:'bar',
+    data:{labels:['登録会員','利用会員'],datasets:[
+      {label:'男性',data:[Number(cur['登録男性']),Number(cur['利用男性'])],backgroundColor:PALETTE.blue},
+      {label:'女性',data:[Number(cur['登録女性']),Number(cur['利用女性'])],backgroundColor:PALETTE.accent},
+    ]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top'}},
+      scales:{x:{stacked:true,beginAtZero:true,title:{display:true,text:'人'}},y:{stacked:true,grid:{display:false}}}}
+  });
+}
+
+// ===================== 時間帯・曜日・予約 =====================
+function renderHowWhen(){
+  const note = (state.t==='R5.3')?'令和5年3月は対象データなし／令和6年3月以降を表示':'';
+  document.getElementById('bookNote').textContent = note;
+  const t = (state.t==='R5.3')?'R6.3':state.t;
+
+  // 時間帯
+  const h = DATA.hourly.find(r=>r['時点']===t);
+  const hLabels=['8時台','9時台','10時台','11時台','12時台','13時台','14時台','15時台','16時台'];
+  if(charts.hourly) charts.hourly.destroy();
+  charts.hourly = new Chart(document.getElementById('hourlyChart'),{
+    type:'bar',
+    data:{labels:hLabels,datasets:[{label:'利用割合',data:hLabels.map(l=>Number(h[l])),
+      backgroundColor:hLabels.map((l,i)=>i<4?PALETTE.brand:PALETTE.brandSoft),borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.y+'%'}}},
+      scales:{x:{grid:{display:false}},y:{beginAtZero:true,ticks:{callback:v=>v+'%'}}}}
+  });
+
+  // 曜日
+  const w = DATA.weekday.find(r=>r['時点']===t);
+  const wLabels=['月曜','火曜','水曜','木曜','金曜'];
+  if(charts.weekday) charts.weekday.destroy();
+  charts.weekday = new Chart(document.getElementById('weekdayChart'),{
+    type:'bar',
+    data:{labels:wLabels,datasets:[{label:'1日あたり利用件数',data:wLabels.map(l=>Number(w[l])),backgroundColor:PALETTE.accent,borderRadius:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{beginAtZero:true,title:{display:true,text:'件/日'}}}}
+  });
+
+  // 予約時期
+  const bt = DATA.booking_timing.find(r=>r['時点']===state.t) || DATA.booking_timing.find(r=>r['時点']===t);
+  const btLabels=['2日以上前','1日以上前','当日2時間以上前','当日1〜2時間前','当日1時間未満'];
+  if(charts.timing) charts.timing.destroy();
+  charts.timing = new Chart(document.getElementById('timingChart'),{
+    type:'doughnut',
+    data:{labels:btLabels,datasets:[{data:btLabels.map(l=>Number(bt[l])),
+      backgroundColor:['#1f8a70','#56ad93','#b6c2bf','#f3c79a','#e8862e']}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+      plugins:{legend:{position:'right',labels:{boxWidth:11,font:{size:11}}},
+        tooltip:{callbacks:{label:c=>`${c.label}：${c.parsed}%`}}}}
+  });
+
+  // 予約方法
+  const bm = DATA.booking_method.find(r=>r['時点']===state.t);
+  if(charts.method) charts.method.destroy();
+  charts.method = new Chart(document.getElementById('methodChart'),{
+    type:'doughnut',
+    data:{labels:['WEB','電話'],datasets:[{data:[Number(bm['WEB']),Number(bm['電話'])],
+      backgroundColor:[PALETTE.brand,PALETTE.accent]}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
+      plugins:{legend:{position:'right'},tooltip:{callbacks:{label:c=>`${c.label}：${c.parsed}%`}}}}
+  });
+}
+
+// ===================== 停留所（最新固定） =====================
+function renderStops(){
+  const s = DATA.stops;
+  if(charts.stops) charts.stops.destroy();
+  charts.stops = new Chart(document.getElementById('stopsChart'),{
+    type:'bar',
+    data:{labels:s.map(r=>r['停留所']),datasets:[
+      {label:'乗車',data:s.map(r=>Number(r['乗車'])),backgroundColor:PALETTE.blue},
+      {label:'降車',data:s.map(r=>Number(r['降車'])),backgroundColor:PALETTE.accent},
+    ]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top'}},
+      scales:{x:{stacked:true,beginAtZero:true,title:{display:true,text:'回'}},
+        y:{stacked:true,grid:{display:false},ticks:{font:{size:10},autoSkip:false}}}}
+  });
+}
+
+// ===================== 地区テーブル =====================
+function renderDistrict(){
+  const d = DATA.district;
+  const max = Math.max(...d.map(r=>Number(r['利用回数'])));
+  const tb = document.querySelector('#districtTable tbody');
+  tb.innerHTML = d.map(r=>{
+    const w = (Number(r['利用回数'])/max*100).toFixed(1);
+    return `<tr>
+      <td>${r['統計地区']}</td>
+      <td>${fmt(r['登録者数'])}</td>
+      <td>${fmt(r['利用者数'])}</td>
+      <td>${r['利用割合']}%</td>
+      <td class="bar-cell"><div class="bar" style="width:${w}%"></div><span>${fmt(r['利用回数'])}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ===================== 切り替え =====================
+function setTime(t){
+  state.t = t;
+  document.querySelectorAll('#timeSeg button').forEach(b=>{
+    b.setAttribute('aria-pressed', b.dataset.t===t ? 'true':'false');
+  });
+  renderKPI(); renderWho(); renderHowWhen();
+}
+
+document.getElementById('timeSeg').addEventListener('click',e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  setTime(btn.dataset.t);
+});
+
+// ===================== 埋め込み・初期化 =====================
+function applyEmbed(){
+  const p = new URLSearchParams(location.search);
+  if(p.get('embed')==='true') document.body.classList.add('embed');
+}
+
+(async function init(){
+  applyEmbed();
+  const names = ['summary','monthly','age','hourly','weekday','booking_timing','booking_method','stops','district'];
+  const loaded = await Promise.all(names.map(loadCSV));
+  names.forEach((n,i)=>DATA[n]=loaded[i]);
+
+  renderTrend();   // 全期間共通
+  renderStops();   // 最新固定
+  renderDistrict();// 最新固定
+  setTime('R8.3'); // 時点依存をまとめて描画
+
+  // ハッシュで開始位置
+  if(location.hash){
+    const el = document.querySelector(location.hash);
+    if(el) el.scrollIntoView();
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f8a70"/>
+      <stop offset="1" stop-color="#0c5e4b"/>
+    </linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#063a2d" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1080" cy="120" r="260" fill="#ffffff" opacity="0.05"/>
+  <circle cx="180" cy="560" r="180" fill="#ffffff" opacity="0.04"/>
+
+  <!-- eyebrow -->
+  <text x="80" y="120" font-family="'Noto Sans JP',sans-serif" font-size="26" font-weight="700"
+        fill="#bff0e1" letter-spacing="6">CHOISOKO HINO &#183; OPEN DATA DASHBOARD</text>
+
+  <!-- タイトル -->
+  <text x="80" y="210" font-family="'Zen Maru Gothic','Noto Sans JP',sans-serif" font-size="78"
+        font-weight="700" fill="#ffffff">チョイソコひの</text>
+  <text x="80" y="290" font-family="'Zen Maru Gothic','Noto Sans JP',sans-serif" font-size="52"
+        font-weight="700" fill="#ffffff">利用状況ダッシュボード</text>
+
+  <!-- サブ -->
+  <text x="82" y="345" font-family="'Noto Sans JP',sans-serif" font-size="26" fill="#d7f0e8">
+    滋賀県日野町のデマンド型乗合交通 ｜ 運行開始からの累計データを視覚化</text>
+
+  <!-- KPIチップ -->
+  <g font-family="'Noto Sans JP',sans-serif">
+    <!-- chip1 -->
+    <rect x="80" y="395" width="220" height="130" rx="18" fill="#ffffff" opacity="0.12"/>
+    <text x="104" y="438" font-size="22" fill="#bff0e1" font-weight="700">累計 利用件数</text>
+    <text x="104" y="495" font-size="54" fill="#ffffff" font-weight="700">22,489<tspan font-size="26" fill="#d7f0e8"> 件</tspan></text>
+
+    <!-- chip2 -->
+    <rect x="316" y="395" width="200" height="130" rx="18" fill="#ffffff" opacity="0.12"/>
+    <text x="340" y="438" font-size="22" fill="#bff0e1" font-weight="700">登録会員数</text>
+    <text x="340" y="495" font-size="54" fill="#ffffff" font-weight="700">2,271<tspan font-size="26" fill="#d7f0e8"> 人</tspan></text>
+
+    <!-- chip3 -->
+    <rect x="532" y="395" width="180" height="130" rx="18" fill="#e8862e"/>
+    <text x="556" y="438" font-size="22" fill="#fff3e7" font-weight="700">乗合率</text>
+    <text x="556" y="495" font-size="54" fill="#ffffff" font-weight="700">1.37<tspan font-size="24" fill="#fff3e7"> 人/便</tspan></text>
+  </g>
+
+  <!-- スパークライン（利用件数の伸び R5.3→R8.3） -->
+  <g filter="url(#soft)">
+    <path d="M 620.0,470 L 620.0,470.0 L 634.2,450.5 L 648.3,447.7 L 662.5,443.6 L 676.7,440.3 L 690.8,444.1 L 705.0,425.3 L 719.2,441.9 L 733.3,446.2 L 747.5,445.7 L 761.7,458.3 L 775.8,457.9 L 790.0,449.3 L 804.2,445.7 L 818.3,444.8 L 832.5,443.2 L 846.7,442.0 L 860.8,458.1 L 875.0,434.6 L 889.2,424.1 L 903.3,424.9 L 917.5,433.9 L 931.7,438.6 L 945.8,436.9 L 960.0,414.8 L 974.2,374.9 L 988.3,384.4 L 1002.5,374.0 L 1016.7,365.2 L 1030.8,379.7 L 1045.0,358.5 L 1059.2,349.9 L 1073.3,378.3 L 1087.5,365.7 L 1101.7,373.0 L 1115.8,360.9 L 1130.0,320.0 L 1130.0,470 Z"
+          fill="url(#area)"/>
+    <path d="M 620.0,470.0 L 634.2,450.5 L 648.3,447.7 L 662.5,443.6 L 676.7,440.3 L 690.8,444.1 L 705.0,425.3 L 719.2,441.9 L 733.3,446.2 L 747.5,445.7 L 761.7,458.3 L 775.8,457.9 L 790.0,449.3 L 804.2,445.7 L 818.3,444.8 L 832.5,443.2 L 846.7,442.0 L 860.8,458.1 L 875.0,434.6 L 889.2,424.1 L 903.3,424.9 L 917.5,433.9 L 931.7,438.6 L 945.8,436.9 L 960.0,414.8 L 974.2,374.9 L 988.3,384.4 L 1002.5,374.0 L 1016.7,365.2 L 1030.8,379.7 L 1045.0,358.5 L 1059.2,349.9 L 1073.3,378.3 L 1087.5,365.7 L 1101.7,373.0 L 1115.8,360.9 L 1130.0,320.0"
+          fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="1130" cy="320" r="9" fill="#e8862e" stroke="#ffffff" stroke-width="3"/>
+  </g>
+  <text x="620" y="305" font-family="'Noto Sans JP',sans-serif" font-size="20" fill="#bff0e1">
+    月別利用件数の推移（R5.3 → R8.3）</text>
+
+  <!-- フッターライン -->
+  <line x1="80" y1="560" x2="1120" y2="560" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2"/>
+  <text x="80" y="595" font-family="'Noto Sans JP',sans-serif" font-size="22" fill="#9fd9c9">
+    オープンデータ利活用の実証実験（プロトタイプ）</text>
+</svg>
