@@ -60,25 +60,6 @@ python3 -m http.server 8000
 # → http://localhost:8000/ をブラウザで開く
 ```
 
-## 🌐 GitHub Pages での公開
-
-1. このリポジトリを自分のアカウントに作成し、`index.html` がリポジトリの**ルート（一番上の階層）**に来るようにファイル一式をアップロード（コミット）します。
-2. **Settings → Pages → Build and deployment → Source** を **Deploy from a branch** にし、Branch を **main**、フォルダを **/ (root)** に設定して **Save** します。
-3. 数分後に `https://kken78.github.io/choisoko-hino-dashboard/` で公開されます。
-
-以降は、変更したファイルを main ブランチに push（再アップロード）するたびに、数分で自動的に再公開されます。
-
-## 🖼️ OGP（SNS共有時のサムネ）の設定
-
-SNSやチャットでURLを貼ったときに表示されるカード画像（`assets/ogp.png`, 1200×630px）を同梱しています。`index.html` の `<head>` 内にある OGP メタタグの **`USERNAME` と `REPO` を、自分の公開URLに2か所（`og:url` と `og:image` ／ `twitter:image`）書き換えてください。**
-
-```html
-<meta property="og:url"   content="https://kken78.github.io/choisoko-hino-dashboard/">
-<meta property="og:image" content="https://kken78.github.io/choisoko-hino-dashboard/assets/ogp.png">
-```
-
-公開後、[Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) や [X Card Validator](https://cards-dev.twitter.com/validator) でキャッシュを更新すると確実に反映されます。画像を差し替えたい場合は `assets/ogp.svg` を編集して PNG に書き出してください。
-
 ## ⚠️ 免責事項
 
 - 本リポジトリの CSV は公開 PDF から独自に抽出したものです。読み取り誤差や変換ミスを含む可能性があるため、正確な数値が必要な場合は必ず日野町の公式資料をご確認ください。
