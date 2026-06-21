@@ -62,11 +62,11 @@ python3 -m http.server 8000
 
 ## 🌐 GitHub Pages での公開
 
-1. このリポジトリを自分のアカウントに作成・プッシュ
-2. Settings → Pages → Build and deployment → Source を **GitHub Actions**（または **Deploy from a branch / main / root**）に設定
-3. 数分後に `https://kken78.github.io/choisoko-hino-dashboard/` で公開されます
+1. このリポジトリを自分のアカウントに作成し、`index.html` がリポジトリの**ルート（一番上の階層）**に来るようにファイル一式をアップロード（コミット）します。
+2. **Settings → Pages → Build and deployment → Source** を **Deploy from a branch** にし、Branch を **main**、フォルダを **/ (root)** に設定して **Save** します。
+3. 数分後に `https://kken78.github.io/choisoko-hino-dashboard/` で公開されます。
 
-`.github/workflows/deploy.yml` を同梱しているため、main ブランチへの push で自動デプロイされます。
+以降は、変更したファイルを main ブランチに push（再アップロード）するたびに、数分で自動的に再公開されます。
 
 ## 🖼️ OGP（SNS共有時のサムネ）の設定
 
