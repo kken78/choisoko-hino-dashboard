@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://kken78.github.io/choisoko-hino-dashboard/assets/ogp.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="チョイソコひの 利用状況ダッシュボード — 累計利用件数22,489件、登録会員2,271人、乗合率1.37人/便">
+<meta property="og:image:alt" content="チョイソコひの 利用状況ダッシュボード — 累計利用件数30,855件、登録会員2,771人、乗合率1.41人/便">
 <meta property="og:site_name" content="チョイソコひの ダッシュボード">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
@@ -179,7 +179,7 @@ body.embed section{padding:14px 0}
     <div class="eyebrow">CHOISOKO HINO · OPEN DATA DASHBOARD</div>
     <h1>チョイソコひの 利用状況ダッシュボード</h1>
     <p class="sub">滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行レポートを抽出・視覚化した、オープンデータ利活用の実証実験（プロトタイプ）です。運行開始（令和5年3月）からの累計データを掲載しています。</p>
-    <div class="period-badge" id="periodBadge">運行開始 令和5年3月 〜 最新 令和8年6月</div>
+    <div class="period-badge" id="periodBadge">運行開始 令和5年3月 〜 最新 令和8年9月</div>
   </div>
 </header>
 
@@ -191,7 +191,8 @@ body.embed section{padding:14px 0}
       <button data-t="R6.3">令和6年3月<small>（1年）</small></button>
       <button data-t="R7.3">令和7年3月<small>（2年）</small></button>
       <button data-t="R8.3">令和8年3月<small>（3年）</small></button>
-      <button data-t="R8.6" aria-pressed="true">令和8年6月<small>（3年3か月）</small></button>
+      <button data-t="R8.6">令和8年6月<small>（3年3か月）</small></button>
+      <button data-t="R8.9" aria-pressed="true">令和8年9月<small>（3年7か月）</small></button>
     </div>
   </div>
 </div>
@@ -243,6 +244,7 @@ body.embed section{padding:14px 0}
         <h3>男女比</h3>
         <p class="desc">登録・利用ともに女性が多数を占めます。</p>
         <div class="chart-box short"><canvas id="genderChart"></canvas></div>
+        <p id="genderNote" style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)"></p>
       </div>
     </div>
   </section>
@@ -281,7 +283,7 @@ body.embed section{padding:14px 0}
   <section id="where">
     <div class="sec-head">
       <h2>どこへ行くか</h2>
-      <span class="note">運行開始からの累計（令和8年6月時点・上位15停留所）</span>
+      <span class="note">運行開始からの累計（令和8年9月時点・上位15停留所）</span>
     </div>
     <div class="card full">
       <h3>目的地停留所 乗降回数 上位15</h3>
@@ -337,7 +339,8 @@ body.embed section{padding:14px 0}
           <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR6.3.pdf" target="_blank" rel="noopener">利用状況 令和6年3月末まで</a></li>
           <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR7.3.pdf" target="_blank" rel="noopener">利用状況 令和7年3月末まで</a></li>
           <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.3.pdf" target="_blank" rel="noopener">利用状況 令和8年3月末まで</a></li>
-          <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.6.pdf" target="_blank" rel="noopener">利用状況 令和8年6月末まで</a></li>
+          <li><a href="https://web.archive.org/web/20260715074213/https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.6.pdf" target="_blank" rel="noopener">利用状況 令和8年6月末まで（町サイトから掲載終了・Internet Archive保存版）</a></li>
+          <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.9.pdf" target="_blank" rel="noopener">利用状況 令和8年9月末まで</a></li>
         </ul>
       </div>
     </div>
@@ -376,7 +379,8 @@ Chart.defaults.color = '#5a6b67';
 Chart.defaults.plugins.legend.labels.boxWidth = 12;
 Chart.defaults.plugins.legend.labels.boxHeight = 12;
 
-let state = { t:'R8.6' };
+const LATEST = 'R8.9';
+let state = { t:LATEST };
 const charts = {};
 const AGE_LABELS=['20歳未満','20歳代','30歳代','40歳代','50歳代','60歳代','70歳代','80歳代','90歳以上'];
 const fmt = n => Number(n).toLocaleString('ja-JP');
@@ -493,6 +497,11 @@ function renderWho(){
       plugins:{legend:{position:'top'}},
       scales:{x:{stacked:true,beginAtZero:true,title:{display:true,text:'人'}},y:{stacked:true,grid:{display:false}}}}
   });
+
+  // 原資料の男女内訳の合計が総数と一致しない時点は、その旨を明記する
+  const useSum = Number(cur['利用男性'])+Number(cur['利用女性']);
+  document.getElementById('genderNote').textContent = useSum!==Number(cur['利用会員数'])
+    ? `※原資料の男女内訳の合計（${fmt(useSum)}人）は、利用会員数（${fmt(cur['利用会員数'])}人）と一致しません。` : '';
 }
 
 // ===================== 時間帯・曜日・予約 =====================
@@ -587,10 +596,11 @@ function renderDistrict(){
     </tr>`;
   };
 
-  if(state.t === 'R8.6'){
-    const d = DATA.area;
+  const areaRows = DATA.area.filter(r=>r['時点']===state.t);
+  if(areaRows.length){
+    const d = areaRows;
     const max = Math.max(...d.map(r=>Number(r['予約件数'])));
-    note.textContent = '令和8年6月時点・累計 ／ 予約件数の多い順';
+    note.textContent = `${wareki(state.t)}時点・累計 ／ 予約件数の多い順`;
     head.innerHTML = '<th>地区</th><th>登録者数</th><th>利用者数</th><th>利用者割合</th><th>予約件数</th>';
     tb.innerHTML = d.map(r=>row(r['地区名'],r['登録者数'],r['利用者数'],r['利用割合'],r['予約件数'],max)).join('');
     foot.textContent = '※令和8年6月末の報告書から、集計単位が「統計地区（32地区＋その他）」から「地区（9区分）」に変わりました。「利用者割合」は全利用者に占める割合です。「一時利用」は会員登録を行わない観光客・訪問者等、「日野」は目的地停留所ベースの集計です。';
@@ -633,7 +643,7 @@ function applyEmbed(){
 
   renderTrend();   // 全期間共通
   renderStops();   // 最新固定
-  setTime('R8.6'); // 時点依存（KPI・年代・予約・地区）をまとめて描画
+  setTime(LATEST); // 時点依存（KPI・年代・予約・地区）をまとめて描画
 
   // ハッシュで開始位置
   if(location.hash){
