@@ -147,6 +147,12 @@ tbody tr:hover{background:var(--brand-soft)}
 .bar-cell .bar{position:absolute;left:0;top:0;bottom:0;background:var(--brand-soft);z-index:0}
 .bar-cell span{position:relative;z-index:1}
 
+/* ---------- ポータルへの戻りリンク ---------- */
+.portal-back{background:var(--surface);border-bottom:1px solid var(--line);font-size:.8rem;line-height:1.5}
+.portal-back .wrap{padding-top:6px;padding-bottom:6px}
+.portal-back a{color:var(--brand);text-decoration:none}
+.portal-back a:hover{text-decoration:underline}
+
 /* ---------- Footer ---------- */
 footer{background:#16413a;color:#cfe3dc;padding:28px 0;font-size:.82rem;margin-top:20px}
 footer a{color:#9fe0cc}
@@ -160,7 +166,7 @@ footer ul{list-style:none;font-size:.78rem;line-height:1.9}
 .legend-inline i{width:11px;height:11px;border-radius:3px;display:inline-block}
 
 /* ---------- embed mode ---------- */
-body.embed header,body.embed footer,body.embed .timebar{display:none}
+body.embed header,body.embed .portal-back,body.embed footer,body.embed .timebar{display:none}
 body.embed section{padding:14px 0}
 
 @media(max-width:640px){
@@ -182,6 +188,7 @@ body.embed section{padding:14px 0}
     <div class="period-badge" id="periodBadge">運行開始 令和5年3月 〜 最新 令和8年9月</div>
   </div>
 </header>
+<div class="portal-back"><div class="wrap"><a href="https://kken78.github.io/hino-portal/">← 日野町データポータル</a></div></div>
 
 <div class="timebar">
   <div class="wrap inner">
@@ -316,7 +323,9 @@ body.embed section{padding:14px 0}
     <div class="cols">
       <div>
         <h4>このダッシュボードについて</h4>
+        <p style="font-size:.78rem;margin-bottom:6px">このページは、滋賀県日野町 政策参与の東健二郎が、個人として作成した試作です。日野町の公式のサイトではなく、町の見解を示すものでもありません。</p>
         <p style="font-size:.78rem">日野町のデマンド型乗合交通「チョイソコひの」の公開運行レポート（PDF）からデータを抽出し、視覚化したオープンデータ利活用の実証実験です。日野町の公式システムではありません。</p>
+        <p style="font-size:.78rem;margin-top:6px">ほかのダッシュボード：<a href="https://kken78.github.io/hino-portal/">日野町データポータル（非公式）</a></p>
       </div>
       <div>
         <h4>収録データ</h4>
