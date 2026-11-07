@@ -4,22 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>チョイソコひの 利用状況｜日野町データポータル（非公式）</title>
-<meta name="description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の利用状況を視覚化したダッシュボード（オープンデータ利活用の実証実験）">
+<meta name="description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の利用状況を視覚化したダッシュボード">
 
 <!-- ===== OGP / Twitter Card ===== -->
 <!-- ↓ ご自身の公開URLに2か所書き換えてください（末尾スラッシュあり） -->
 <meta property="og:url" content="https://kken78.github.io/choisoko-hino-dashboard/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="チョイソコひの 利用状況ダッシュボード">
-<meta property="og:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化。運行開始からの累計 利用件数・会員数・乗合率などを掲載（オープンデータ利活用の実証実験）。">
+<meta property="og:title" content="チョイソコひの 利用状況">
+<meta property="og:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化。運行開始からの累計 利用件数・会員数・乗合率などを掲載。">
 <meta property="og:image" content="https://kken78.github.io/choisoko-hino-dashboard/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="チョイソコひの 利用状況。公開資料から作成した個人の試作（非公式）｜日野町データポータル">
-<meta property="og:site_name" content="チョイソコひの ダッシュボード">
+<meta property="og:site_name" content="チョイソコひの 利用状況">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="チョイソコひの 利用状況ダッシュボード">
+<meta name="twitter:title" content="チョイソコひの 利用状況">
 <meta name="twitter:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化したダッシュボード。">
 <meta name="twitter:image" content="https://kken78.github.io/choisoko-hino-dashboard/og.png">
 <!-- ============================== -->
@@ -193,7 +193,7 @@ body.embed section{padding:14px 0}
 <p class="portal-area">統計とくらし</p>
 <h1 class="portal-title">チョイソコひの 利用状況</h1>
 <p class="portal-lead">滋賀県日野町のデマンド型乗合交通「チョイソコひの」の利用状況レポートの数値を、運行開始（令和5年3月）からの累計で並べています。</p>
-<p class="portal-asof">資料の時点：令和8年9月末まで（利用状況レポートの最新）。転記日：2026年11月4日</p>
+<p class="portal-asof">資料の時点：令和8年9月末まで（利用状況レポートの最新）</p>
 <!-- portal-shared:siblings start -->
 <nav class="portal-siblings" aria-label="統計とくらしのページ"><span class="portal-lbl">このほかのページ</span><a href="https://kken78.github.io/hino-population/">地区別人口</a><a href="https://kken78.github.io/hino-dashboard/">日野のすがた</a><span aria-current="page">チョイソコひの 利用状況</span></nav>
 <!-- portal-shared:siblings end -->
@@ -339,7 +339,7 @@ body.embed section{padding:14px 0}
 <li><a href="https://web.archive.org/web/20260715074213/https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.6.pdf">利用状況 令和8年6月末まで</a>（PDF。町のページから外れたため、Internet Archive の保存版）</li>
 <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.9.pdf">利用状況 令和8年9月末まで</a>（PDF、720KB）</li>
 </ul></dd>
-<dt>資料の時点</dt><dd>運行開始（令和5年3月）から各時点の月末までの累計。最新は令和8年9月末まで。データ転記日：2026年11月4日（令和8年9月末までの分）</dd>
+<dt>資料の時点</dt><dd>運行開始（令和5年3月）から各時点の月末までの累計。最新は令和8年9月末まで。</dd>
 <dt>注意</dt><dd><p>内容の正確性を保証するものではありません。最新・正確な情報は日野町の公式ページでご確認ください。</p><p>CSV は公開 PDF から独自に読み取ったもので、読み取りの誤りを含むことがあります。一部の月別利用人数・年代別構成は、原資料で数値の表示が重なっており、読み取りに幅があります（README の「免責事項」）。</p><p><a href="https://www.town.shiga-hino.lg.jp/0000006854.html">チョイソコひの（日野町ホームページ）</a></p></dd>
 <dt>データ</dt><dd>CSV：<a href="data/summary.csv">summary.csv</a>（累計の概要）、<a href="data/monthly.csv">monthly.csv</a>（月別の利用件数・利用人数）、<a href="data/age.csv">age.csv</a>（年代別構成）、<a href="data/hourly.csv">hourly.csv</a>（時間帯別）、<a href="data/weekday.csv">weekday.csv</a>（曜日別）、<a href="data/booking_timing.csv">booking_timing.csv</a>（予約の時期）、<a href="data/booking_method.csv">booking_method.csv</a>（予約の方法）、<a href="data/stops.csv">stops.csv</a>（目的地停留所）、<a href="data/district.csv">district.csv</a>（統計地区別）、<a href="data/area.csv">area.csv</a>（地区別）</dd>
 <dt>ソースコード</dt><dd><a href="https://github.com/kken78/choisoko-hino-dashboard">kken78/choisoko-hino-dashboard</a>（GitHub）</dd>
