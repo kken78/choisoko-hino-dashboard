@@ -495,9 +495,10 @@ function renderKPI(){
       const months = monthNo(t)-monthNo(p['時点']);
       const unitD = d.unit==='%' ? 'ポイント' : d.unit;
       const from = `${jiten(p['時点'])} <span class="num">${showNum(p[d.key],decimals(p[d.key]))}${d.unit}</span> から`;
-      const change = diff>0 ? `▲ <span class="num">${showNum(diff,pdp)}${unitD}</span> 増`
-                   : diff<0 ? `▼ <span class="num">${showNum(-diff,pdp)}${unitD}</span> 減`
-                   : '＝ 横ばい';
+      // 増減は、負の値に △ を付け、向きを文言で示す。正の値に印は付けない（hino-portal DESIGN.md 3.3。DESIGN.md ADR-4）
+      const change = diff>0 ? `<span class="num">${showNum(diff,pdp)}${unitD}</span> 増`
+                   : diff<0 ? `<span class="num">△${showNum(-diff,pdp)}${unitD}</span> 減`
+                   : '<span class="num">0</span> 増減なし';
       deltaHTML = `<div class="k-delta">${from} ${change}<span class="num">（${spanText(months)}）</span></div>`;
     }
     grid.insertAdjacentHTML('beforeend',`
