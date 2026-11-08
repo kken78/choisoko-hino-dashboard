@@ -70,7 +70,7 @@ python3 -m http.server 8000
 
 ## 共通の部品
 
-`index.html` の見出し・分野のナビ・ページの一覧・フッターと、その CSS（`<!-- portal-shared:〈名前〉 start/end -->` で囲んだ箇所）は、[hino-portal](https://github.com/kken78/hino-portal) の `shared/` の正本の写し（DESIGN.md ADR-1）。手元では `python3 <hino-portal>/shared/check.py index.html` で正本と同じかを確かめる（CI の `.github/workflows/check-shared.yml` でも同じ検査を行う）。
+`index.html` の見出し・分野のナビ・ページの一覧・フッターと、その CSS（`<!-- portal-shared:〈名前〉 start/end -->` で囲んだ箇所）は、[hino-portal](https://github.com/kken78/hino-portal) の `shared/` の正本の写し（DESIGN.md ADR-1）。手元では、正本と同じかと文字の大きさ（hino-portal DESIGN.md 5.2、DESIGN.md ADR-3）を `python3 <hino-portal>/shared/check.py --fonts index.html` で、幅 360px と 1024px での文字の実寸と横のはみ出しを `node <hino-portal>/shared/check_mobile.mjs index.html`（Playwright が要る。置き方は hino-portal の shared/README.md）で確かめる（CI の `.github/workflows/check-shared.yml` でも同じ検査を行う）。
 
 ## 免責事項
 
