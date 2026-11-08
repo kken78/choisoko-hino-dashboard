@@ -31,9 +31,9 @@
 <!-- portal-shared:css start --><style>
 /* 日野町データポータル 共通の部品（見出し・ナビ・ページの見出し・フッター）。
    正本は hino-portal/shared/shell.css。各ページはこれを <style> に写し、CI で同じであることを確かめる（DESIGN.md 9.1）。
-   文字の大きさは 14px 以上（DESIGN.md 5.2）。色は 3章の藍と朱。書体は端末のもの（5.1）。
+   文字の大きさは --portal-fs-sub 14px・--portal-fs 16px・--portal-fs-h1 18px・--portal-fs-h3 20px・--portal-fs-h2 24px の5段階だけ（DESIGN.md 5.2）。色は 3章の藍と朱。書体は端末のもの（5.1）。
    --portal-cat1〜5 はグラフの区別の色（3.4）、--portal-pillar1〜5（面）と --portal-pillar1-ink〜5-ink（文字）は第6次総合計画の政策の柱の色（3.6）。 */
-:root{--portal-ai:#1E4E9C;--portal-ai-ink:#0C2547;--portal-shu:#C33D2E;--portal-bg:#EFF3F9;--portal-card:#FFFFFF;--portal-ink:#1A2333;--portal-muted:#5B6B85;--portal-line:#DCE4F0;--portal-foot-bg:#0C2547;--portal-foot-ink:#C9D6EA;--portal-cat1:#3460FB;--portal-cat2:#AC3E00;--portal-cat3:#197A4B;--portal-cat4:#008299;--portal-cat5:#767676;--portal-pillar1:#E72F5C;--portal-pillar2:#E36800;--portal-pillar3:#639B22;--portal-pillar4:#009AB4;--portal-pillar5:#3F51A2;--portal-pillar1-ink:#D91948;--portal-pillar2-ink:#B45300;--portal-pillar3-ink:#4F7B1B;--portal-pillar4-ink:#007A8F;--portal-pillar5-ink:#3F51A2;--portal-fs:16px;--portal-fs-sub:14px;--portal-fs-h1:18px;--portal-fs-h2:24px;--portal-sp1:8px;--portal-sp2:16px;--portal-sp3:24px;--portal-sp4:40px;--portal-font:"Hiragino Sans","Hiragino Kaku Gothic ProN","BIZ UDPGothic","Yu Gothic Medium","Yu Gothic","Noto Sans CJK JP","Noto Sans JP",Meiryo,system-ui,sans-serif}
+:root{--portal-ai:#1E4E9C;--portal-ai-ink:#0C2547;--portal-shu:#C33D2E;--portal-bg:#EFF3F9;--portal-card:#FFFFFF;--portal-ink:#1A2333;--portal-muted:#5B6B85;--portal-line:#DCE4F0;--portal-foot-bg:#0C2547;--portal-foot-ink:#C9D6EA;--portal-cat1:#3460FB;--portal-cat2:#AC3E00;--portal-cat3:#197A4B;--portal-cat4:#008299;--portal-cat5:#767676;--portal-pillar1:#E72F5C;--portal-pillar2:#E36800;--portal-pillar3:#639B22;--portal-pillar4:#009AB4;--portal-pillar5:#3F51A2;--portal-pillar1-ink:#D91948;--portal-pillar2-ink:#B45300;--portal-pillar3-ink:#4F7B1B;--portal-pillar4-ink:#007A8F;--portal-pillar5-ink:#3F51A2;--portal-fs:16px;--portal-fs-sub:14px;--portal-fs-h1:18px;--portal-fs-h2:24px;--portal-fs-h3:20px;--portal-sp1:8px;--portal-sp2:16px;--portal-sp3:24px;--portal-sp4:40px;--portal-font:"Hiragino Sans","Hiragino Kaku Gothic ProN","BIZ UDPGothic","Yu Gothic Medium","Yu Gothic","Noto Sans CJK JP","Noto Sans JP",Meiryo,system-ui,sans-serif}
 .portal-wrap{max-width:1080px;margin:0 auto;padding:0 var(--portal-sp2);box-sizing:border-box}
 .portal-head,.portal-page,.portal-foot{font-family:var(--portal-font);font-size:var(--portal-fs);line-height:1.7;letter-spacing:.02em}
 .portal-head *,.portal-page *,.portal-foot *{box-sizing:border-box}
@@ -98,25 +98,25 @@ body{
   position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(0,0,0,.02);
 }
 .timebar .inner{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
-.timebar .lbl{font-size:.8rem;color:var(--ink-soft);font-weight:700}
+.timebar .lbl{font-size:var(--portal-fs-sub);color:var(--ink-soft);font-weight:700}
 .seg{display:inline-flex;background:var(--bg);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
 .seg button{
   border:0;background:transparent;cursor:pointer;
-  font-family:inherit;font-size:.85rem;font-weight:700;color:var(--ink-soft);
-  padding:7px 14px;border-radius:8px;transition:.15s;white-space:nowrap;
+  font-family:inherit;font-size:var(--portal-fs-sub);font-weight:700;color:var(--ink-soft);
+  padding:7px 10px;border-radius:8px;transition:.15s;white-space:nowrap;
 }
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:var(--shadow)}
-.seg button small{margin-left:3px;font-weight:500;opacity:.85}
+.seg button .sm{margin-left:3px;font-weight:500;opacity:.85}
 .seg button:focus-visible{outline:2px solid #000;box-shadow:0 0 0 4px #FFD43D;outline-offset:1px}
 
 /* ---------- Sections ---------- */
 section{padding:30px 0}
 .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 .sec-head h2{
-  font-family:"Zen Maru Gothic",sans-serif;font-size:1.25rem;font-weight:700;
+  font-family:"Zen Maru Gothic",sans-serif;font-size:var(--portal-fs-h3);font-weight:700;
 }
-.sec-head .note{font-size:.8rem;color:var(--ink-soft)}
+.sec-head .note{font-size:var(--portal-fs-sub);color:var(--ink-soft)}
 
 /* ---------- KPI cards ---------- */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:14px}
@@ -124,13 +124,13 @@ section{padding:30px 0}
   background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;
 }
-.kpi .k-label{font-size:.8rem;color:var(--ink-soft);font-weight:500;display:flex;align-items:center;gap:6px}
-.kpi .k-val{font-family:"Zen Maru Gothic",sans-serif;font-size:1.9rem;font-weight:700;margin-top:4px;line-height:1.1}
-.kpi .k-unit{font-size:.85rem;font-weight:500;color:var(--ink-soft);margin-left:3px}
+.kpi .k-label{font-size:var(--portal-fs-sub);color:var(--ink-soft);font-weight:500;display:flex;align-items:center;gap:6px}
+.kpi .k-val{font-family:"Zen Maru Gothic",sans-serif;font-size:var(--portal-fs-h2);font-weight:700;margin-top:4px;line-height:1.1}
+.kpi .k-unit{font-size:var(--portal-fs-sub);font-weight:500;color:var(--ink-soft);margin-left:3px}
 .kpi .k-val,.kpi .k-delta .num,.nw{white-space:nowrap}
-.kpi .k-asof{font-size:14px;color:var(--ink-soft);margin-top:2px}
-.kpi .k-delta{font-size:14px;margin-top:8px;color:var(--ink)}
-.kpi .k-sub{font-size:14px;color:var(--ink-soft);margin-top:6px}
+.kpi .k-asof{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:2px}
+.kpi .k-delta{font-size:var(--portal-fs-sub);margin-top:8px;color:var(--ink)}
+.kpi .k-sub{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:6px}
 
 /* ---------- Chart cards ---------- */
 .chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
@@ -139,15 +139,16 @@ section{padding:30px 0}
   padding:18px;box-shadow:var(--shadow);
 }
 .card.full{grid-column:1/-1}
-.card h3{font-size:1rem;font-weight:700;margin-bottom:4px}
-.card .desc{font-size:.78rem;color:var(--ink-soft);margin-bottom:14px}
+.card h3{font-size:var(--portal-fs-h1);font-weight:700;margin-bottom:4px}
+.card .desc{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-bottom:14px}
 .chart-box{position:relative;width:100%;height:300px}
 .chart-box.tall{height:360px}
 .chart-box.short{height:240px}
+.chart-box.stops{height:520px}
 
 /* ---------- Table ---------- */
 .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
-table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:520px}
+table{border-collapse:collapse;width:100%;font-size:var(--portal-fs-sub);min-width:520px}
 th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--line)}
 th:first-child,td:first-child{text-align:left}
 thead th{background:var(--brand-soft);color:var(--brand);font-weight:700;position:sticky;top:0}
@@ -158,15 +159,16 @@ tbody tr:hover{background:var(--brand-soft)}
 
 /* 時間帯別（時点 × 時間帯の表）と出来事の表 */
 .card .tbl-wrap{box-shadow:none;border-radius:8px}
-table.hourly{min-width:560px;font-size:14px}
+table.hourly{min-width:560px;font-size:var(--portal-fs-sub)}
 table.hourly th,table.hourly td{padding:8px 6px;white-space:nowrap}
 table.hourly td{text-align:center}
 table.hourly tbody th{text-align:left;font-weight:700;background:var(--surface);position:static;color:var(--ink)}
-table.events{min-width:0;font-size:14px}
+table.events{min-width:0;font-size:var(--portal-fs-sub)}
 table.events th,table.events td{text-align:left;vertical-align:top}
 table.events td.n,table.events th{white-space:nowrap}
 table.events td.when{white-space:nowrap}
-.tbl-note{font-size:14px;color:var(--ink-soft);margin-top:8px}
+.tbl-note{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:8px}
+.foot-note{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:8px}
 @media(max-width:640px){
   table.events thead{display:none}
   table.events tr{display:block;border-bottom:1px solid var(--line);padding:8px 12px}
@@ -174,7 +176,7 @@ table.events td.when{white-space:nowrap}
   table.events td.n{display:inline;margin-right:8px;font-weight:700}
   table.events td.when{display:inline;font-weight:700}
 }
-.legend-inline{display:flex;gap:14px;flex-wrap:wrap;font-size:.76rem;color:var(--ink-soft);margin-top:10px}
+.legend-inline{display:flex;gap:14px;flex-wrap:wrap;font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:10px}
 .legend-inline span{display:inline-flex;align-items:center;gap:5px}
 .legend-inline i{width:11px;height:11px;border-radius:3px;display:inline-block}
 
@@ -213,12 +215,12 @@ body.embed section{padding:14px 0}
   <div class="wrap inner">
     <span class="lbl">集計時点（累計）</span>
     <div class="seg" id="timeSeg" role="group" aria-label="集計時点の切り替え">
-      <button data-t="R5.3">令和5年3月<small>（初月）</small></button>
-      <button data-t="R6.3">令和6年3月<small>（1年）</small></button>
-      <button data-t="R7.3">令和7年3月<small>（2年）</small></button>
-      <button data-t="R8.3">令和8年3月<small>（3年）</small></button>
-      <button data-t="R8.6">令和8年6月<small>（3年3か月）</small></button>
-      <button data-t="R8.9" aria-pressed="true">令和8年9月<small>（3年7か月）</small></button>
+      <button data-t="R5.3">令和5年3月<span class="sm">（初月）</span></button>
+      <button data-t="R6.3">令和6年3月<span class="sm">（1年）</span></button>
+      <button data-t="R7.3">令和7年3月<span class="sm">（2年）</span></button>
+      <button data-t="R8.3">令和8年3月<span class="sm">（3年）</span></button>
+      <button data-t="R8.6">令和8年6月<span class="sm">（3年3か月）</span></button>
+      <button data-t="R8.9" aria-pressed="true">令和8年9月<span class="sm">（3年7か月）</span></button>
     </div>
   </div>
 </div>
@@ -277,7 +279,7 @@ body.embed section{padding:14px 0}
         <h3>男女別の人数</h3>
         <p class="desc">登録会員と利用会員の男女別の人数。</p>
         <div class="chart-box short"><canvas id="genderChart"></canvas></div>
-        <p id="genderNote" style="margin-top:8px;font-size:.74rem;color:var(--ink-soft)"></p>
+        <p id="genderNote" class="foot-note"></p>
       </div>
     </div>
   </section>
@@ -327,7 +329,7 @@ body.embed section{padding:14px 0}
     <div class="card full">
       <h3>目的地停留所 乗降回数 上位15</h3>
       <p class="desc">停留所ごとの乗車と降車の回数。横棒の長さは乗車と降車の合計。</p>
-      <div class="chart-box" style="height:520px"><canvas id="stopsChart"></canvas></div>
+      <div class="chart-box stops"><canvas id="stopsChart"></canvas></div>
     </div>
   </section>
 
@@ -345,7 +347,7 @@ body.embed section{padding:14px 0}
         <tbody></tbody>
       </table>
     </div>
-    <p class="note" id="districtFoot" style="margin-top:10px;font-size:.74rem;color:var(--ink-soft)"></p>
+    <p class="note foot-note" id="districtFoot"></p>
   </section>
 
 </main>
@@ -395,7 +397,22 @@ const AI = cssVar('--portal-ai');
 const INK = cssVar('--portal-ink');
 const rgbOf = hex => { const h=hex.replace('#',''); return [0,2,4].map(i=>parseInt(h.substr(i,2),16)).join(','); };
 Chart.defaults.font.family = "'Noto Sans JP',sans-serif";
-Chart.defaults.font.size = 12;
+// Chart.js の文字は 14px（hino-portal DESIGN.md 5.2。Chart.js の既定は 12px）。canvas の文字は実寸の検査で測れないので、静的検査で見る
+Chart.defaults.font.size = 14;
+// 横軸の名前が入りきらないときの間引きは、右端（最新）から数えて最新の名前を必ず残す（shiga-hino-plans DESIGN.md ADR-8 の表）。
+// Chart.js は左端から間引くので、間引いたあとの間隔のまま、右端から選び直す。間引き（autoSkip）のあと、余白の計算（fit）の前に呼ばれる
+function keepLatestTick(scale){
+  const all = scale.getLabels ? scale.getLabels() : [];
+  const t = scale.ticks;
+  if(!scale.isHorizontal() || all.length < 2 || t.length < 2 || t.length >= all.length) return;
+  if(t[t.length-1].value === all.length-1) return;
+  const step = t[1].value - t[0].value;
+  const kept = [];
+  for(let i = all.length-1; i >= 0; i -= step) kept.unshift({value:i, label:all[i]});
+  scale.ticks = kept;
+  scale._labelSizes = null;
+}
+Chart.defaults.scales.category.beforeFit = keepLatestTick;
 Chart.defaults.color = '#5a6b67';
 Chart.defaults.plugins.legend.labels.boxWidth = 12;
 Chart.defaults.plugins.legend.labels.boxHeight = 12;
@@ -683,7 +700,7 @@ function renderHowWhen(){
     data:{labels:btLabels,datasets:[{data:btLabels.map(l=>Number(bt[l])),
       backgroundColor:CAT}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'55%',
-      plugins:{legend:{position:'right',labels:{boxWidth:11,font:{size:11}}},
+      plugins:{legend:{position:'right',labels:{boxWidth:11}},
         tooltip:{callbacks:{label:c=>`${c.label}：${c.parsed}%`}}}}
   });
 
@@ -700,19 +717,50 @@ function renderHowWhen(){
 }
 
 // ===================== 停留所（最新固定） =====================
+// 停留所の名前は、文字を小さくせず、グラフの幅の半分ほどに収まるよう複数の行に分けて示す（shiga-hino-plans DESIGN.md ADR-8 の表。DESIGN.md ADR-3）。
+// 「番号_名前」の「_」で分け、名前がまだ長ければ文字の幅を測って分ける（閉じかっこと句読点は行の頭に置かない）。行が増えた分だけグラフを高くする
+const STOP_FS = 14;
+const NO_HEAD = '）)」』、。・ー';
+function stopLabelWidth(){
+  const box = document.getElementById('stopsChart').parentElement;
+  return Math.max(110, Math.floor(box.clientWidth * 0.45));
+}
+function wrapStopName(name, maxW){
+  const ctx = document.createElement('canvas').getContext('2d');
+  ctx.font = `${STOP_FS}px ${Chart.defaults.font.family}`;
+  const lines = [];
+  name.split('_').forEach(part=>{
+    let cur = '';
+    for(const ch of part){
+      if(cur && ctx.measureText(cur + ch).width > maxW){
+        // 閉じかっこなどは前の字と一緒に次の行へ送る
+        if(NO_HEAD.includes(ch) && cur.length > 1){ lines.push(cur.slice(0, -1)); cur = cur.slice(-1) + ch; }
+        else { lines.push(cur); cur = ch; }
+      }
+      else cur += ch;
+    }
+    if(cur) lines.push(cur);
+  });
+  return lines;
+}
+let stopChars = 0;
 function renderStops(){
   const s = DATA.stops;
+  stopChars = stopLabelWidth();
+  const labels = s.map(r=>wrapStopName(r['停留所'], stopChars));
+  const lines = labels.reduce((a,l)=>a+l.length,0);
+  document.getElementById('stopsChart').parentElement.style.height = Math.max(520, Math.round(lines*STOP_FS*1.4 + s.length*16 + 90)) + 'px';
   if(charts.stops) charts.stops.destroy();
   charts.stops = new Chart(document.getElementById('stopsChart'),{
     type:'bar',
-    data:{labels:s.map(r=>r['停留所']),datasets:[
+    data:{labels,datasets:[
       {label:'乗車',data:s.map(r=>Number(r['乗車'])),backgroundColor:CAT[0]},
       {label:'降車',data:s.map(r=>Number(r['降車'])),backgroundColor:CAT[1]},
     ]},
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top'}},
       scales:{x:{stacked:true,beginAtZero:true,title:{display:true,text:'回'}},
-        y:{stacked:true,grid:{display:false},ticks:{font:{size:10},autoSkip:false}}}}
+        y:{stacked:true,grid:{display:false},ticks:{autoSkip:false}}}}
   });
 }
 
@@ -762,6 +810,9 @@ function setTime(t){
   });
   renderKPI(); renderWho(); renderHowWhen(); renderDistrict();
 }
+
+// 画面の幅が変わって、停留所の名前の1行の幅が変わるときだけ描き直す
+window.addEventListener('resize',()=>{ if(DATA.stops && stopLabelWidth()!==stopChars) renderStops(); });
 
 document.getElementById('timeSeg').addEventListener('click',e=>{
   const btn = e.target.closest('button'); if(!btn) return;
