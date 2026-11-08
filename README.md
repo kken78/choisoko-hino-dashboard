@@ -1,4 +1,4 @@
-# チョイソコひの 利用状況ダッシュボード（プロトタイプ）
+# チョイソコひの 利用状況ダッシュボード
 
 滋賀県日野町のデマンド型乗合交通**「チョイソコひの」**の公開運行レポート（PDF）からデータを抽出し、視覚的にわかりやすく閲覧できるよう構築した、オープンデータ利活用のための実証実験プロジェクトです。
 
@@ -62,6 +62,10 @@ CSV を `fetch` で読み込むため、ファイルを直接開くのではな�
 python3 -m http.server 8000
 # → http://localhost:8000/ をブラウザで開く
 ```
+
+## 共通の部品
+
+`index.html` の見出し・分野のナビ・ページの一覧・フッターと、その CSS（`<!-- portal-shared:〈名前〉 start/end -->` で囲んだ箇所）は、[hino-portal](https://github.com/kken78/hino-portal) の `shared/` の正本の写し（DESIGN.md ADR-1）。手元では `python3 <hino-portal>/shared/check.py index.html` で正本と同じかを確かめる（CI の `.github/workflows/check-shared.yml` でも同じ検査を行う）。
 
 ## ⚠️ 免責事項
 
