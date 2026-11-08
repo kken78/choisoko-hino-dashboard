@@ -388,7 +388,7 @@ async function loadCSV(name){
   });
 }
 
-// 区別の色（hino-portal DESIGN.md 3.4。共通の部品の CSS のトークン）
+// 区別の色（hino-portal DESIGN.md 3.4。共通の部品の CSS のトークン）。系列が2つ以上のグラフだけに順に当て、系列が1つのグラフは藍（--portal-ai）
 const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const CAT = [1,2,3,4,5].map(i=>cssVar(`--portal-cat${i}`));
 const AI = cssVar('--portal-ai');
@@ -587,7 +587,7 @@ function renderTrend(){
   if(charts.users) charts.users.destroy();
   charts.users = new Chart(document.getElementById('usersChart'),{
     type:'bar',
-    data:{labels,datasets:[{label:'月別利用人数',data:m.map(r=>Number(r['月別利用人数'])),backgroundColor:CAT[3],borderRadius:3}]},
+    data:{labels,datasets:[{label:'月別利用人数',data:m.map(r=>Number(r['月別利用人数'])),backgroundColor:AI,borderRadius:3}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false},tooltip:{callbacks:{title:(items)=>wareki(m[items[0].dataIndex]['和暦'])}}},
       scales:{x:{ticks:{maxRotation:0,autoSkip:true,maxTicksLimit:12},grid:{display:false}},y:{beginAtZero:true,title:{display:true,text:'人'}}}}
@@ -622,8 +622,8 @@ function renderWho(){
   charts.gender = new Chart(document.getElementById('genderChart'),{
     type:'bar',
     data:{labels:['登録会員','利用会員'],datasets:[
-      {label:'男性',data:[Number(cur['登録男性']),Number(cur['利用男性'])],backgroundColor:CAT[2]},
-      {label:'女性',data:[Number(cur['登録女性']),Number(cur['利用女性'])],backgroundColor:CAT[3]},
+      {label:'男性',data:[Number(cur['登録男性']),Number(cur['利用男性'])],backgroundColor:CAT[0]},
+      {label:'女性',data:[Number(cur['登録女性']),Number(cur['利用女性'])],backgroundColor:CAT[1]},
     ]},
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
       plugins:{legend:{position:'top'}},
@@ -668,7 +668,7 @@ function renderHowWhen(){
   if(charts.weekday) charts.weekday.destroy();
   charts.weekday = new Chart(document.getElementById('weekdayChart'),{
     type:'bar',
-    data:{labels:wLabels,datasets:[{label:'1日あたり利用件数',data:wLabels.map(l=>Number(w[l])),backgroundColor:CAT[0],borderRadius:3}]},
+    data:{labels:wLabels,datasets:[{label:'1日あたり利用件数',data:wLabels.map(l=>Number(w[l])),backgroundColor:AI,borderRadius:3}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
       scales:{x:{grid:{display:false}},y:{beginAtZero:true,title:{display:true,text:'件/日'}}}}
