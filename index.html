@@ -300,7 +300,7 @@ body.embed section{padding:14px 0}
             <tbody></tbody>
           </table>
         </div>
-        <p class="tbl-note">値は各時点の運行開始からの累計の割合（%）。新しい時点を上に並べています。色の濃さは値の大きさを示します。令和5年3月末（初月）の値は収録していません。</p>
+        <p class="tbl-note">値は各時点の運行開始からの累計の割合（%）。古い時点を上に並べています。色の濃さは値の大きさを示します。令和5年3月末（初月）の値は収録していません。</p>
       </div>
       <div class="card">
         <h3>曜日別の平均利用件数</h3>
@@ -656,7 +656,7 @@ function renderWho(){
 
 // ===================== 時間帯（時点 × 時間帯の表。hino-portal DESIGN.md 4.1） =====================
 function renderHourly(){
-  const rows = DATA.hourly.slice().sort((a,b)=>monthNo(b['時点'])-monthNo(a['時点']));  // 新しい時点を上に
+  const rows = DATA.hourly.slice().sort((a,b)=>monthNo(a['時点'])-monthNo(b['時点']));  // 古い時点を上に（上から下へ時間が進む。hino-portal DESIGN.md 6.5）
   const max = Math.max(...rows.flatMap(r=>HOUR_LABELS.map(l=>Number(r[l]))));
   const rgb = rgbOf(AI);
   document.getElementById('hourlyHead').innerHTML =
@@ -667,7 +667,7 @@ function renderHourly(){
       return `<td style="background:rgba(${rgb},${(v/max*0.4).toFixed(3)})">${v}%</td>`;
     }).join('') + '</tr>').join('');
   // 説明文は数字だけ（6.3）
-  const lt = rows[0];
+  const lt = rows[rows.length-1];  // 説明文は最新の時点の値で書く
   const vals = [...new Set(HOUR_LABELS.map(l=>Number(lt[l])))].sort((a,b)=>b-a);
   const at = v => HOUR_LABELS.filter(l=>Number(lt[l])===v).join('と');
   document.getElementById('hourlyDesc').textContent =
