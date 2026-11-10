@@ -23,11 +23,8 @@
 <meta name="twitter:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化したダッシュボード。">
 <meta name="twitter:image" content="https://kken78.github.io/choisoko-hino-dashboard/og.png">
 <!-- ============================== -->
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="vendor/chart.umd.js"></script>
+<script src="data.js"></script>
 <!-- portal-shared:css start --><style>
 /* 日野町データポータル 共通の部品（見出し・ナビ・ページの見出し・フッター）。
    正本は hino-portal/shared/shell.css。各ページはこれを <style> に写し、CI で同じであることを確かめる（DESIGN.md 9.1）。
@@ -86,7 +83,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
-  font-family:"Noto Sans JP",system-ui,sans-serif;
+  font-family:var(--portal-font);
   background:var(--bg);color:var(--ink);
   line-height:1.6;-webkit-font-smoothing:antialiased;
 }
@@ -114,7 +111,7 @@ body{
 section{padding:30px 0}
 .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 .sec-head h2{
-  font-family:"Zen Maru Gothic",sans-serif;font-size:var(--portal-fs-h3);font-weight:700;
+  font-family:var(--portal-font);font-size:var(--portal-fs-h3);font-weight:700;
 }
 .sec-head .note{font-size:var(--portal-fs-sub);color:var(--ink-soft)}
 
@@ -125,7 +122,7 @@ section{padding:30px 0}
   padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;
 }
 .kpi .k-label{font-size:var(--portal-fs-sub);color:var(--ink-soft);font-weight:500;display:flex;align-items:center;gap:6px}
-.kpi .k-val{font-family:"Zen Maru Gothic",sans-serif;font-size:var(--portal-fs-h2);font-weight:700;margin-top:4px;line-height:1.1}
+.kpi .k-val{font-family:var(--portal-font);font-size:var(--portal-fs-h2);font-weight:700;margin-top:4px;line-height:1.1}
 .kpi .k-unit{font-size:var(--portal-fs-sub);font-weight:500;color:var(--ink-soft);margin-left:3px}
 .kpi .k-val,.kpi .k-delta .num,.nw{white-space:nowrap}
 .kpi .k-asof{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:2px}
@@ -162,6 +159,9 @@ tbody tr:hover{background:var(--brand-soft)}
 table.hourly{min-width:560px;font-size:var(--portal-fs-sub)}
 table.hourly th,table.hourly td{padding:8px 6px;white-space:nowrap}
 table.hourly td{text-align:center}
+.hleg{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:var(--portal-fs-sub);color:var(--ink-soft);margin:8px 0 4px}
+.hleg span{display:inline-flex;align-items:center;gap:4px}
+.hleg i{display:inline-block;width:22px;height:14px;border-radius:2px;border:1px solid rgba(0,0,0,.08)}
 table.hourly tbody th{text-align:left;font-weight:700;background:var(--surface);position:static;color:var(--ink)}
 table.events{min-width:0;font-size:var(--portal-fs-sub)}
 table.events th,table.events td{text-align:left;vertical-align:top}
@@ -294,13 +294,14 @@ body.embed section{padding:14px 0}
       <div class="card full">
         <h3>時間帯別の利用割合（累計）</h3>
         <p class="desc" id="hourlyDesc"></p>
+        <p class="hleg" id="hourlyLegend"></p>
         <div class="tbl-wrap">
           <table class="hourly" id="hourlyTable">
             <thead><tr id="hourlyHead"></tr></thead>
             <tbody></tbody>
           </table>
         </div>
-        <p class="tbl-note">値は各時点の運行開始からの累計の割合（%）。古い時点を上に並べています。色の濃さは値の大きさを示します。令和5年3月末（初月）の値は収録していません。</p>
+        <p class="tbl-note">値は各時点の運行開始からの累計の割合（%）。古い時点を上に並べています。色は値を5つの段階に分けて示します（色の段階は表の上）。令和5年3月末（初月）の値は収録していません。</p>
       </div>
       <div class="card">
         <h3>曜日別の平均利用件数</h3>
@@ -376,9 +377,9 @@ body.embed section{padding:14px 0}
 <script>
 // ===================== データ読み込み =====================
 const DATA = {};
+// data.js の CSV（data/*.csv から tools/build_data.py で作る。ファイルを直接開いても読めるように。DESIGN.md ADR-6）
 async function loadCSV(name){
-  const res = await fetch(`data/${name}.csv`);
-  const text = await res.text();
+  const text = CSV[name];
   const lines = text.trim().split('\n');
   const headers = lines[0].split(',');
   return lines.slice(1).map(line=>{
@@ -395,8 +396,7 @@ const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(
 const CAT = [1,2,3,4,5].map(i=>cssVar(`--portal-cat${i}`));
 const AI = cssVar('--portal-ai');
 const INK = cssVar('--portal-ink');
-const rgbOf = hex => { const h=hex.replace('#',''); return [0,2,4].map(i=>parseInt(h.substr(i,2),16)).join(','); };
-Chart.defaults.font.family = "'Noto Sans JP',sans-serif";
+Chart.defaults.font.family = cssVar('--portal-font');
 // Chart.js の文字は 14px（hino-portal DESIGN.md 5.2。Chart.js の既定は 12px）。canvas の文字は実寸の検査で測れないので、静的検査で見る
 Chart.defaults.font.size = 14;
 // 横軸の名前が入りきらないときの間引きは、右端（最新）から数えて最新の名前を必ず残す（shiga-hino-plans DESIGN.md ADR-8 の表）。
@@ -562,7 +562,7 @@ const eventMarks = {
       ctx.strokeStyle = CAT[1]; ctx.lineWidth = 1.5; ctx.setLineDash([4,3]);
       ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.font = "700 14px 'Noto Sans JP',sans-serif"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.font = '700 14px ' + cssVar('--portal-font'); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
       ctx.fillStyle = INK; ctx.fillText(ev.n, px+2, top-2);
     });
     ctx.restore();
@@ -655,16 +655,20 @@ function renderWho(){
 }
 
 // ===================== 時間帯（時点 × 時間帯の表。hino-portal DESIGN.md 4.1） =====================
+// 時間帯の表の色：ページの色（緑）の明度の5段階。値を区切って塗る（DESIGN.md ADR-6）。最も濃い段階だけ白い字
+const HOURLY_RAMP = ["#E2F8F0", "#B3E4D3", "#7FCDB4", "#3FAE90", "#15846B"];
+const HOURLY_BINS = ['8%以下','9〜10%','11〜12%','13〜14%','15%以上'];
+const HOURLY_STEP = v => v<=8?0: v<=10?1: v<=12?2: v<=14?3: 4;
 function renderHourly(){
+  document.getElementById('hourlyLegend').innerHTML = '色の段階：' + HOURLY_RAMP.map((c,i)=>`<span><i style="background:${c}"></i>${HOURLY_BINS[i]}</span>`).join('');
   const rows = DATA.hourly.slice().sort((a,b)=>monthNo(a['時点'])-monthNo(b['時点']));  // 古い時点を上に（上から下へ時間が進む。hino-portal DESIGN.md 6.5）
-  const max = Math.max(...rows.flatMap(r=>HOUR_LABELS.map(l=>Number(r[l]))));
-  const rgb = rgbOf(AI);
   document.getElementById('hourlyHead').innerHTML =
     '<th scope="col">時点（累計）</th>' + HOUR_LABELS.map(l=>`<th scope="col">${l}</th>`).join('');
   document.querySelector('#hourlyTable tbody').innerHTML = rows.map(r=>
     `<tr><th scope="row">${jiten(r['時点'])}まで</th>` + HOUR_LABELS.map(l=>{
       const v = Number(r[l]);
-      return `<td style="background:rgba(${rgb},${(v/max*0.4).toFixed(3)})">${v}%</td>`;
+      const i = HOURLY_STEP(v);
+      return `<td style="background:${HOURLY_RAMP[i]};${i===4?'color:#fff;':''}">${v}%</td>`;
     }).join('') + '</tr>').join('');
   // 説明文は数字だけ（6.3）
   const lt = rows[rows.length-1];  // 説明文は最新の時点の値で書く

@@ -61,12 +61,16 @@
 
 ## ローカルでの確認
 
-CSV を `fetch` で読み込むため、ファイルを直接開くのではなく簡易サーバ経由で開いてください。
+`index.html` をブラウザで直接開けば動きます（外のサイトには通信しません）。データは `data.js` から読みます。
+
+`data/` の CSV を直したら、`data.js` を作り直します。
 
 ```bash
-python3 -m http.server 8000
-# → http://localhost:8000/ をブラウザで開く
+python3 tools/build_data.py          # data.js を書き出す
+python3 tools/build_data.py --check  # data.js が CSV と合っているかだけを確かめる
 ```
+
+グラフの部品（Chart.js）は `vendor/` に置いています（版と入手元は `vendor/README.md`）。
 
 ## 共通の部品
 
