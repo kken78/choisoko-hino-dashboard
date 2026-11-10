@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>チョイソコひの 利用状況｜日野町データポータル（非公式）</title>
-<meta name="description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の利用状況を視覚化したダッシュボード">
+<meta name="description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の利用状況をグラフにしたページ">
 
 <!-- ===== OGP / Twitter Card ===== -->
 <!-- ↓ ご自身の公開URLに2か所書き換えてください（末尾スラッシュあり） -->
 <meta property="og:url" content="https://kken78.github.io/choisoko-hino-dashboard/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="チョイソコひの 利用状況">
-<meta property="og:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化。運行開始からの累計 利用件数・会員数・乗合率などを掲載。">
+<meta property="og:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データをグラフにしたページ。運行開始からの累計 利用件数・会員数・乗合率などを掲載。">
 <meta property="og:image" content="https://kken78.github.io/choisoko-hino-dashboard/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,7 +20,7 @@
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="チョイソコひの 利用状況">
-<meta name="twitter:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データを視覚化したダッシュボード。">
+<meta name="twitter:description" content="滋賀県日野町のデマンド型乗合交通「チョイソコひの」の運行データをグラフにしたページ。">
 <meta name="twitter:image" content="https://kken78.github.io/choisoko-hino-dashboard/og.png">
 <!-- ============================== -->
 <script src="vendor/chart.umd.js"></script>
@@ -104,7 +104,7 @@ body{
 }
 .seg button:hover{color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--brand);color:#fff;box-shadow:var(--shadow)}
-.seg button .sm{margin-left:3px;font-weight:500;opacity:.85}
+.seg button .sm{margin-left:3px;font-weight:400;opacity:.85}
 .seg button:focus-visible{outline:2px solid #000;box-shadow:0 0 0 4px #FFD43D;outline-offset:1px}
 
 /* ---------- Sections ---------- */
@@ -121,9 +121,9 @@ section{padding:30px 0}
   background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
   padding:18px 18px 16px;box-shadow:var(--shadow);position:relative;
 }
-.kpi .k-label{font-size:var(--portal-fs-sub);color:var(--ink-soft);font-weight:500;display:flex;align-items:center;gap:6px}
+.kpi .k-label{font-size:var(--portal-fs-sub);color:var(--ink-soft);font-weight:400;display:flex;align-items:center;gap:6px}
 .kpi .k-val{font-family:var(--portal-font);font-size:var(--portal-fs-h2);font-weight:700;margin-top:4px;line-height:1.1}
-.kpi .k-unit{font-size:var(--portal-fs-sub);font-weight:500;color:var(--ink-soft);margin-left:3px}
+.kpi .k-unit{font-size:var(--portal-fs-sub);font-weight:400;color:var(--ink-soft);margin-left:3px}
 .kpi .k-val,.kpi .k-delta .num,.nw{white-space:nowrap}
 .kpi .k-asof{font-size:var(--portal-fs-sub);color:var(--ink-soft);margin-top:2px}
 .kpi .k-delta{font-size:var(--portal-fs-sub);margin-top:8px;color:var(--ink)}
@@ -246,7 +246,7 @@ body.embed section{padding:14px 0}
       <div class="card full">
         <h3>利用件数の推移（月間）</h3>
         <p class="desc">棒：月間の利用件数／線：1日当たり利用件数。令和5年3月から9月は運賃無料、令和5年10月から有償運行。点線と番号は出来事の印で、内容は図の下の表にあります。</p>
-        <div class="chart-box tall"><canvas id="trendChart" role="img" aria-label="利用件数と1日当たり利用件数の月ごとの推移（令和5年3月〜令和8年9月）。出来事の印6つ。数値は monthly.csv"></canvas></div>
+        <div class="chart-box tall"><canvas id="trendChart" role="img" aria-label="利用件数と1日当たり利用件数の月ごとの推移（令和5年3月〜令和8年9月）。出来事の印6つ。数値は monthly.csv（データの欄）にあります"></canvas></div>
         <div class="tbl-wrap" style="margin-top:14px">
           <table class="events" id="eventsTable">
             <caption class="tbl-note" style="text-align:left;caption-side:top;padding:8px 12px 0">出来事の印</caption>
@@ -366,7 +366,7 @@ body.embed section{padding:14px 0}
 <li><a href="https://www.town.shiga-hino.lg.jp/cmsfiles/contents/0000006/6854/riyoujyoukyouR8.9.pdf">利用状況 令和8年9月末まで</a>（PDF、720KB）</li>
 </ul></dd>
 <dt>資料の時点</dt><dd>運行開始（令和5年3月）から各時点の月末までの累計。最新は令和8年9月末まで。</dd>
-<dt>注意</dt><dd><p>内容の正確性を保証するものではありません。最新・正確な情報は日野町の公式ページでご確認ください。</p><p>CSV は公開 PDF から独自に読み取ったもので、読み取りの誤りを含むことがあります。一部の月別利用人数・年代別構成は、原資料で数値の表示が重なっており、読み取りに幅があります（README の「免責事項」）。</p><p><a href="https://www.town.shiga-hino.lg.jp/0000006854.html">チョイソコひの（日野町ホームページ）</a></p></dd>
+<dt>注意</dt><dd><p>内容の正確性を保証するものではありません。最新・正確な情報は日野町の公式ページでご確認ください。</p><p>CSV は公開 PDF から独自に読み取ったもので、読み取りの誤りを含むことがあります。一部の月別利用人数・年代別構成は、原典で数値の表示が重なっており、読み取りに幅があります（README の「免責事項」）。</p><p><a href="https://www.town.shiga-hino.lg.jp/0000006854.html">チョイソコひの（日野町ホームページ）</a></p></dd>
 <dt>データ</dt><dd>CSV：<a href="data/summary.csv">summary.csv</a>（累計の概要）、<a href="data/monthly.csv">monthly.csv</a>（月別の利用件数・利用人数）、<a href="data/age.csv">age.csv</a>（年代別構成）、<a href="data/hourly.csv">hourly.csv</a>（時間帯別）、<a href="data/weekday.csv">weekday.csv</a>（曜日別）、<a href="data/booking_timing.csv">booking_timing.csv</a>（予約の時期）、<a href="data/booking_method.csv">booking_method.csv</a>（予約の方法）、<a href="data/stops.csv">stops.csv</a>（目的地停留所）、<a href="data/district.csv">district.csv</a>（統計地区別）、<a href="data/area.csv">area.csv</a>（地区別）</dd>
 <dt>ソースコード</dt><dd><a href="https://github.com/kken78/choisoko-hino-dashboard">kken78/choisoko-hino-dashboard</a>（GitHub）</dd>
 <dt>ライセンス</dt><dd>MIT License（ソースコード）。データ（CSV）は CC BY 4.0 相当（README の「ライセンス」）。</dd>
@@ -470,7 +470,7 @@ function renderKPI(){
 
     let asof;
     if(d.kind==='stock') asof = `${jiten(t)}現在`;
-    else if(d.kind==='month') asof = `${jiten(t)}までのレポート（原資料の注記「${JOAI_NOTE[t]}」）`;
+    else if(d.kind==='month') asof = `${jiten(t)}までのレポート（原典の注記「${JOAI_NOTE[t]}」）`;
     else asof = `運行開始から${jiten(t)}までの累計`;
 
     // 比べる相手：summary.csv の一つ前の行
@@ -485,7 +485,7 @@ function renderKPI(){
     }
     // 乗合率は原資料の注記（「3月中」「月中」）が違う時点どうしを比べない
     if(d.key==='乗合率' && pi>=0 && JOAI_NOTE[t]!==JOAI_NOTE[rows[pi]['時点']]){
-      notes.push(`${jiten(rows[pi]['時点'])}までの値は原資料の注記が「${JOAI_NOTE[rows[pi]['時点']]}」で違うので比べない`);
+      notes.push(`${jiten(rows[pi]['時点'])}までの値は原典の注記が「${JOAI_NOTE[rows[pi]['時点']]}」で違うので比べない`);
       comparable = false;
     }
     if(comparable){
@@ -651,7 +651,7 @@ function renderWho(){
   // 原資料の男女内訳の合計が総数と一致しない時点は、その旨を明記する
   const useSum = Number(cur['利用男性'])+Number(cur['利用女性']);
   document.getElementById('genderNote').textContent = useSum!==Number(cur['利用会員数'])
-    ? `※原資料の男女内訳の合計（${fmt(useSum)}人）は、利用会員数（${fmt(cur['利用会員数'])}人）と一致しません。` : '';
+    ? `※原典の男女内訳の合計（${fmt(useSum)}人）は、利用会員数（${fmt(cur['利用会員数'])}人）と一致しません。` : '';
 }
 
 // ===================== 時間帯（時点 × 時間帯の表。hino-portal DESIGN.md 4.1） =====================
